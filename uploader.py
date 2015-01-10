@@ -9,10 +9,10 @@ from collections import deque
 import math
 
 # Setup Syslog for logging
-logger = logging.getLogger('SyslogLogger')
-logger.setLevel(logging.DEBUG)
-handler = logging.handlers.SysLogHandler(address = '/dev/log')
-logger.addHandler(handler)
+import logging
+LOG_FILENAME = 'arduino-pi-uploader.log'
+logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG)
+
 
 if os.getenv('KEY_ID') and os.getenv('FEED_ID'):
     KEY_ID = str(os.getenv('KEY_ID'))
