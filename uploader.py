@@ -9,7 +9,6 @@ from collections import deque
 import math
 
 # Setup Syslog for logging
-import logging
 LOG_FILENAME = 'arduino-pi-uploader.log'
 logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG)
 
@@ -20,7 +19,7 @@ if os.getenv('KEY_ID') and os.getenv('FEED_ID'):
 else:
     msg = "You need to set the KEY_ID and FEED_ID environment variables."
     print msg
-    logger.info(msg)
+    logging.info(msg)
     KEY_ID = None
     FEED_ID = None
 
@@ -40,7 +39,7 @@ ser = serial.Serial("/dev/ttyUSB0", 9600, timeout=10)
 data = {'concentration':deque(),'ratio':deque(),'humidity':deque(),'temperature':deque(),
         'light':deque(),'airquality':deque(),'no2':deque(),'co':deque()}
 
-logger.info("Beginning sensor collection")
+logging.info("Beginning sensor collection")
 last_update = datetime.now()
 api = xively.XivelyAPIClient(KEY_ID)
 feed = api.feeds.get(FEED_ID)
@@ -65,7 +64,7 @@ while True:
     val = 0.0
 
     if datetime.now() > last_update + timedelta(minutes = 5) or ser.isOpen() == False:
-        logger.info("Frozen for unknown reason")
+        logging.info("Frozen for unknown reason")
         ser.setDTR(0)
         time.sleep(0.1)
         ser.setDTR(1)
@@ -105,4 +104,4 @@ while True:
 
     except Exception, e:
         print e
-        logger.info(e)
+        logging.info(e)
