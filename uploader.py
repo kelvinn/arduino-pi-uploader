@@ -46,8 +46,8 @@ last_update = datetime.now()
 
 def vpd_calc(T, RH):
     e_st = 0.61365*math.exp(17.502*T/(240.97+T))
-    VPD = (e_st - (RH / 100.0) * e_st) * 1000
-    return VPD
+    vpd = (e_st - (RH / 100.0) * e_st) * 1000
+    return vpd
 
 def send(cosm_id, sensor_type, value):
     print last_update, "ID: ", cosm_id, "Value: ", value
