@@ -51,10 +51,13 @@ def vpd_calc(T, RH):
     return VPD
 
 def send(cosm_id, sensor_type, value):
-    datastream = feed.datastreams.get(cosm_id)
-    datastream.current_value = value
-    datastream.update(fields=['current_value'])
-    print last_update, "ID: ", cosm_id, "Value: ", value
+    if KEY_ID and FEED_ID:
+        datastream = feed.datastreams.get(cosm_id)
+        datastream.current_value = value
+        datastream.update(fields=['current_value'])
+        print last_update, "ID: ", cosm_id, "Value: ", value
+    else:
+        print "Not sending: KEY_ID and FEED_ID not configured."
 
 while True:
     line = ser.readline()
@@ -84,8 +87,6 @@ while True:
             if datetime.now() > last_update + timedelta(minutes = 1):
                 print "Sending to cosm"
                 last_update = datetime.now()
-                #vpd_arr = vpd_calc(data['3'], data['2'])
-                #vpd = sum(vpd_arr)/len(vpd_arr)
 
                 if len(data['temperature']) > 0:
                     t_avg = sum(data['temperature'])/len(data['temperature'])
