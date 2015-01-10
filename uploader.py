@@ -16,12 +16,14 @@ logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG)
 if os.getenv('KEY_ID') and os.getenv('FEED_ID'):
     KEY_ID = str(os.getenv('KEY_ID'))
     FEED_ID = str(os.getenv('FEED_ID'))
+    api = xively.XivelyAPIClient(KEY_ID)
+    feed = api.feeds.get(FEED_ID)
 else:
     msg = "You need to set the KEY_ID and FEED_ID environment variables."
     print msg
     logging.info(msg)
-    KEY_ID = None
-    FEED_ID = None
+    api = None
+    feed = None
 
 def lookupid(x):
     return {
@@ -41,8 +43,6 @@ data = {'concentration':deque(),'ratio':deque(),'humidity':deque(),'temperature'
 
 logging.info("Beginning sensor collection")
 last_update = datetime.now()
-api = xively.XivelyAPIClient(KEY_ID)
-feed = api.feeds.get(FEED_ID)
 
 def vpd_calc(T, RH):
     e_st = 0.61365*math.exp(17.502*T/(240.97+T))
@@ -50,7 +50,7 @@ def vpd_calc(T, RH):
     return VPD
 
 def send(cosm_id, sensor_type, value):
-    if KEY_ID and FEED_ID:
+    if feed and api:
         datastream = feed.datastreams.get(cosm_id)
         datastream.current_value = value
         datastream.update(fields=['current_value'])
