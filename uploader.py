@@ -50,13 +50,11 @@ def vpd_calc(T, RH):
     return VPD
 
 def send(cosm_id, sensor_type, value):
+    print last_update, "ID: ", cosm_id, "Value: ", value
     if feed and api:
         datastream = feed.datastreams.get(cosm_id)
         datastream.current_value = value
         datastream.update(fields=['current_value'])
-        print last_update, "ID: ", cosm_id, "Value: ", value
-    else:
-        print "Not sending: KEY_ID and FEED_ID not configured."
 
 while True:
     line = ser.readline()
