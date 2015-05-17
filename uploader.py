@@ -61,7 +61,7 @@ while True:
         line = ser.readline()
         line_list = line.split(",")
         val = 0.0
-    except serial.serialutil.SerialException:
+    except serial.SerialException:
         logging.info("Unable to read from serial port")
 
     if datetime.now() > last_update + timedelta(minutes = 5) or ser.isOpen() == False:
