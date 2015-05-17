@@ -57,9 +57,12 @@ def send(cosm_id, sensor_type, value):
         datastream.update(fields=['current_value'])
 
 while True:
-    line = ser.readline()
-    line_list = line.split(",")
-    val = 0.0
+    try:
+        line = ser.readline()
+        line_list = line.split(",")
+        val = 0.0
+    except SerialException:
+        logging.info("Unable to read from serial port")
 
     if datetime.now() > last_update + timedelta(minutes = 5) or ser.isOpen() == False:
         logging.info("Frozen for unknown reason")
