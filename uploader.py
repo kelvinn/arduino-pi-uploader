@@ -52,10 +52,12 @@ def vpd_calc(T, RH):
 def send(cosm_id, sensor_type, value):
     print last_update, "ID: ", cosm_id, "Value: ", value
     if feed and api:
-        datastream = feed.datastreams.get(cosm_id)
-        datastream.current_value = value
-        datastream.update(fields=['current_value'])
-
+        try:
+            datastream = feed.datastreams.get(cosm_id)
+            datastream.current_value = value
+            datastream.update(fields=['current_value'])
+        except:
+            logging.error("Unable to send to xively")
 while True:
     try:
         line = ser.readline()
